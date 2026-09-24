@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mysql:8.0
+    # native password auth keeps the PHP mysqli connection simple
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rmspass
+      MYSQL_DATABASE: rms
+    volumes:
+      - db_data:/var/lib/mysql
+      # *.sql files here are imported automatically the first time the DB starts
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prmspass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rmspass
+      DB_NAME: rms
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:

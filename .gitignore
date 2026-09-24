@@ -1,0 +1,21 @@
+# Local database credentials - never commit
+includes/database/db-config.local.php
+
+# Backups / scratch
+*.bak
+*.log
+
+# Uploaded user content
+task_ref/*
+!task_ref/.gitkeep
+img/profile_imgs/user_profile_imgs/*
+!img/profile_imgs/user_profile_imgs/defaultprofilepic.png
+
+# OS noise
+Thumbs.db
+.DS_Store
+
+# Command Center - pre-change backups
+*.ccbak
+*.preemail
+*.preguard

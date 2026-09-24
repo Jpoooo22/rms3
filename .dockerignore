@@ -1,0 +1,16 @@
+# keep the web image lean and avoid baking in backups / editor state
+.claude
+*.bak
+*.bak-*
+*.pretheme-bak
+*.bak-coe
+*.bak-announce
+*.bak-preremove
+css/*.map
+docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+start.command
+stop.command
+SEND-TO-OTHERS-README.md

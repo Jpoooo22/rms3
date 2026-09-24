@@ -1,0 +1,8 @@
+<?php
+// LOCAL ONLY - not committed to git (see .gitignore).
+return array(
+    'host'     => 'localhost',
+    'name'     => 'rms',
+    'user'     => 'root',
+    'password' => 'underwaterxxx*',
+);
