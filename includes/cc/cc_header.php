@@ -146,6 +146,18 @@ if ($cc_row) { $cc_unread = (int) $cc_row['c']; }
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="new-user.php">Add new user</a>
                             <a class="collapse-item" href="users.php">View User List</a>
+                            <?php if (strtolower(trim($user['usertype'])) === 'admin') {
+                                $ccPend = 0;
+                                $ccR = @mysqli_query($con, "SELECT COUNT(*) AS n FROM users WHERE approval = 'unverified'");
+                                if ($ccR) { $ccRow = mysqli_fetch_assoc($ccR); $ccPend = (int) $ccRow['n']; }
+                            ?>
+                                <a class="collapse-item" href="account-admin.php">
+                                    Approvals &amp; Passwords
+                                    <?php if ($ccPend > 0) { ?>
+                                        <span class="badge badge-danger"><?php echo $ccPend; ?></span>
+                                    <?php } ?>
+                                </a>
+                            <?php } ?>
                         </div>
                     </div>
                 </li>
@@ -159,7 +171,6 @@ if ($cc_row) { $cc_unread = (int) $cc_row['c']; }
                     </a>
                     <div id="ccCollapseTasks" class="collapse" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="add-task.php">Add task</a>
                             <a class="collapse-item" href="assign-tasks.php">Assign tasks</a>
                         </div>
                     </div>

@@ -90,7 +90,6 @@ if (isset($_SESSION['id'])) {
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item" href="new-user.php">Add new user</a>
-                            <a class="collapse-item" href="add-task.php">Add task</a>
                             <a class="collapse-item" href="assign-tasks.php">Assign tasks</a>
                             <a class="collapse-item" href="users-list.php">Users List</a>
                             <a class="collapse-item" href="tasks-list.php">Tasks list</a>

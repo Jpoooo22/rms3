@@ -111,6 +111,11 @@ $user = array();
                                 <div class="text-center">
                                     <!-- <a class="small" href="forgot-password.php">Register</a> -->
                                     <a class="small" href="forgot-password.php" style="color: black;">Forgot Password</a>
+                                    <div class="mt-2">
+                                        <a class="small" href="registration.php" style="color: black;">
+                                            No account yet? Request one
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

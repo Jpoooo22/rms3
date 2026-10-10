@@ -311,6 +311,13 @@ function cc_project_tasks($con, $projectId)
     $sql = "SELECT t.id_task, t.task_name, t.classification,
                    t.task_start_date, t.task_end_date,
                    t.task_status, t.percent, t.added_date_time,
+                   /* task.percent is never written to, so derive real progress
+                      from the phases the same way the dashboard does. */
+                   (SELECT COUNT(*) FROM task_phase ph
+                     WHERE ph.p_task_id = t.id_task)                       AS phase_total,
+                   (SELECT COUNT(*) FROM task_phase ph
+                     WHERE ph.p_task_id = t.id_task
+                       AND TRIM(COALESCE(ph.phase_status,'')) <> '')       AS phase_done,
                    a.user_id      AS point_user_id,
                    a.approver_id  AS approver_user_id,
                    pu.firstname   AS point_firstname,
@@ -354,8 +361,18 @@ function cc_due_state($endDate, $status = 'open')
         return array('No target date', 'secondary', null);
     }
 
-    if (strtolower($status) !== 'open') {
-        return array('Closed', 'success', null);
+    // Only a genuinely finished task counts as done. A failed task must never
+    // be shown in the same green as a completed one, and an unrecognised or
+    // empty status must not be mistaken for complete either.
+    $s = strtolower(trim((string) $status));
+    if ($s === 'closed' || $s === 'completed' || $s === 'complete') {
+        return array('Completed', 'success', null);
+    }
+    if ($s === 'failure' || $s === 'failed') {
+        return array('Failed', 'danger', null);
+    }
+    if ($s !== 'open') {
+        return array($status !== '' ? $status : 'No status', 'secondary', null);
     }
 
     $days = (int) floor(($due - strtotime(date('Y-m-d'))) / 86400);

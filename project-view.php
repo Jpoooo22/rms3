@@ -196,11 +196,35 @@ require __DIR__ . '/includes/cc/cc_header.php';
                                         </div>
                                     </td>
                                     <td class="small">
-                                        <span class="badge badge-<?php echo strtolower($t['task_status']) === 'open' ? 'warning' : 'success'; ?>">
-                                            <?php echo cc_e($t['task_status']); ?>
+                                        <?php
+                                            // Green is reserved for genuinely completed tasks.
+                                            $st = strtolower(trim($t['task_status']));
+                                            if ($st === 'closed' || $st === 'completed' || $st === 'complete') {
+                                                $stClass = 'success'; $stLabel = 'Completed';
+                                            } elseif ($st === 'failure' || $st === 'failed') {
+                                                $stClass = 'danger';  $stLabel = 'Failed';
+                                            } elseif ($st === 'open') {
+                                                $stClass = 'warning'; $stLabel = 'Open';
+                                            } else {
+                                                $stClass = 'secondary';
+                                                $stLabel = $t['task_status'] !== '' ? $t['task_status'] : 'No status';
+                                            }
+                                        ?>
+                                        <span class="badge badge-<?php echo $stClass; ?>">
+                                            <?php echo cc_e($stLabel); ?>
                                         </span>
                                     </td>
-                                    <td class="small text-right"><?php echo (int) $t['percent']; ?>%</td>
+                                    <td class="small text-right">
+                                        <?php
+                                            $ptot  = isset($t['phase_total']) ? (int) $t['phase_total'] : 0;
+                                            $pdone = isset($t['phase_done'])  ? (int) $t['phase_done']  : 0;
+                                            $pct   = $ptot > 0 ? (int) round($pdone / $ptot * 100) : 0;
+                                            echo $pct . '%';
+                                        ?>
+                                        <div class="text-muted" style="font-size:.7rem;">
+                                            <?php echo $ptot > 0 ? $pdone . '/' . $ptot . ' phases' : 'no phases'; ?>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

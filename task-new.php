@@ -117,6 +117,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_task'])) {
         } else {
             $taskId = mysqli_insert_id($con);
 
+            /* Phases, carried over from the retired add-task.php. A task is
+               tracked by its phases (phase_status holds the completion
+               timestamp), so progress only works once these exist. */
+            $taskIdForPhase = (string) $taskId;
+            $phaseNames = array();
+            foreach ($_POST as $k => $v) {
+                if (strpos($k, 'part') === 0 && trim($v) !== '') {
+                    $phaseNames[] = trim($v);
+                }
+            }
+            foreach ($phaseNames as $pn) {
+                $ph = mysqli_prepare($con,
+                    "INSERT INTO task_phase (p_task_id, phase_name, phase_status, phase_date, phase_edate)
+                     VALUES (?, ?, '', '', '')");
+                mysqli_stmt_bind_param($ph, 'ss', $taskIdForPhase, $pn);
+                mysqli_stmt_execute($ph);
+            }
+
             /* Point person + approver. task_id/user_id are varchar here. */
             $pointId    = (string) $form['point_user_id'];
             $approverId = $form['approver_id'] !== '' ? (string) $form['approver_id'] : '';
@@ -351,6 +369,33 @@ require __DIR__ . '/includes/cc/cc_header.php';
                         Who signs this off. Digital approval and signing come in a later step.
                     </small>
                 </div>
+            </div>
+        </div>
+
+        <!-- Phases: same layout the retired add-task.php used. -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-stream fa-sm mr-1"></i> Phases
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">
+                    Break the task into the steps it moves through. Progress is measured
+                    by how many phases are finished, so a task with no phases always
+                    shows 0%. Leave the unused boxes blank.
+                </p>
+                <?php for ($i = 1; $i <= 5; $i++) {
+                    $pv = isset($_POST['part' . $i]) ? $_POST['part' . $i] : '';
+                ?>
+                    <div class="form-group">
+                        <label class="small font-weight-bold mb-1">Phase <?php echo $i; ?><?php echo $i === 1 ? ' *' : ''; ?></label>
+                        <input type="text" name="part<?php echo $i; ?>" class="form-control"
+                               value="<?php echo cc_e($pv); ?>"
+                               placeholder="<?php echo $i === 1 ? 'e.g. Draft the assessment' : 'optional'; ?>"
+                               <?php echo $i === 1 ? 'required' : ''; ?>>
+                    </div>
+                <?php } ?>
             </div>
         </div>
 

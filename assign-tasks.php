@@ -215,7 +215,6 @@ $all_notifs_result = mysqli_query($con, $all_notifs_modal_query);
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="add-task.php">Add task</a>
                             <a class="collapse-item" href="assign-tasks.php">Assign tasks</a>
                             <a class="collapse-item" href="tasks-list.php">Tasks list</a>
                     </div>
@@ -554,13 +553,6 @@ $all_notifs_result = mysqli_query($con, $all_notifs_modal_query);
                                                             </div>
                                                             <div class="list-wrapper">
                                                                 <ul class="todo-list todo-list-rounded">
-                                                                    <li class="border-bottom-0 mt-1">
-                                                                        <div class="form-check w-100">
-                                                                            <a href="add-task.php" class="text-primary">
-                                                                                Add new task
-                                                                            </a>
-                                                                        </div>
-                                                                    </li>
                                                                     <li class="border-bottom-0 mt-1">
                                                                         <div class="form-check w-100">
                                                                             <a href="tasks-list.php" class="text-primary">
